@@ -18,7 +18,7 @@ public class ExamController {
         this.examinerService = examinerService;
     }
 
-    @GetMapping("/ticket/")
+    @GetMapping("/ticket")
     public Set<Question> getQuestions(@RequestParam int amount){
         return examinerService.getQuestions(amount);
     }

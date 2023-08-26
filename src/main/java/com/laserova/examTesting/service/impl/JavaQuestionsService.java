@@ -2,14 +2,21 @@ package com.laserova.examTesting.service.impl;
 
 import com.laserova.examTesting.dto.Question;
 import com.laserova.examTesting.service.QuestionService;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Service
 public class JavaQuestionsService implements QuestionService {
-    List<Question> questions = new ArrayList<>();
+    private final List<Question> questions;
+
+    public JavaQuestionsService() {
+        this.questions = new ArrayList<>();
+    }
+
     @Override
     public Question add(String question, String answer) {
-        Question question1 = new Question(question,answer);
+        Question question1 = new Question(question, answer);
         questions.add(question1);
         return question1;
     }
@@ -35,6 +42,6 @@ public class JavaQuestionsService implements QuestionService {
     public Question getRandomQuestion() {
         Random rdm = new Random();
         int index = rdm.nextInt(questions.size());
-       return questions.get(index);
+        return questions.get(index);
     }
 }
