@@ -14,20 +14,19 @@ import java.util.Set;
 public class ExaminerServiceImpl implements ExaminerService {
     private final QuestionService questionService;
 
-    public ExaminerServiceImpl(QuestionService questionService){
+    public ExaminerServiceImpl(QuestionService questionService) {
         this.questionService = questionService;
     }
 
     @Override
-    public Set<Question> getQuestions(int amount) throws TooManyRequestsException {
+    public Set<Question> getQuestions(int amount) {
         Set<Question> examTicket = new HashSet<>();
-        try {
+        if (amount>questionService.getAll().size()){
+            throw new TooManyRequestsException("Количество вопросов в базе меньше затребованного для билета");
+        }
             do {
                 examTicket.add(questionService.getRandomQuestion());
             } while (examTicket.size() < amount);
-        } catch (TooManyRequestsException ex) {
-            System.out.println(ex.getMessage());
-        }
         return examTicket;
     }
 }
