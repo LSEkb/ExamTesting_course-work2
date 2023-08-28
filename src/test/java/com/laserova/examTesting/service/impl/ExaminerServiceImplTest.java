@@ -3,7 +3,6 @@ package com.laserova.examTesting.service.impl;
 import com.laserova.examTesting.dto.Question;
 import com.laserova.examTesting.exception.TooManyRequestsException;
 import com.laserova.examTesting.service.QuestionService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ExaminerServiceImplTest {
@@ -42,7 +41,7 @@ class ExaminerServiceImplTest {
 
 //    @Test
 //    void qetQuestions_amountNoMoreSize_returnSetOfRandomQuestions() {
-//        when(questionService.getAll()).thenReturn(questionsTest());
+//        doReturn(questionsTest()).when(questionService);
 //        Set<Question> result1 = underTest.getQuestions(3);
 //        Set<Question> result2 = underTest.getQuestions(3);
 //        assertNotEquals(result2, result1);

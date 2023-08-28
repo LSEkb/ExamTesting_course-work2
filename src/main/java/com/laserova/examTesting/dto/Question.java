@@ -20,15 +20,6 @@ public class Question {
         return answer;
     }
 
-//    public void setQuestion(String question) {
-//        this.question = question;
-//    }
-//
-//    public void setAnswer(String answer) {
-//        this.answer = answer;
-//    }
-
-
     @Override
     public int hashCode() {
         return Objects.hash(question, answer);

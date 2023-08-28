@@ -5,30 +5,31 @@ import com.laserova.examTesting.exception.QuestionAlreadyAddedException;
 import com.laserova.examTesting.exception.QuestionNotFoundException;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class JavaQuestionsServiceTest {
 
     JavaQuestionsService underTest = new JavaQuestionsService();
-    Question question1 = new Question("que1", "ans1");
-    Question question2 = new Question("que2", "ans2");
-    Question question3 = new Question("que3", "ans3");
-    Question question4 = new Question("que4", "ans4");
-    Question question5 = new Question("que5", "ans5");
-    Question question6 = new Question("que6", "ans6");
+    Question question1 = new Question("que0", "ans0");
+    Question question2 = new Question("que1", "ans1");
+    Question question3 = new Question("que2", "ans2");
+    Question question4 = new Question("que3", "ans3");
+    Question question5 = new Question("que4", "ans4");
 
     List<Question> questions = new ArrayList<>(Arrays.asList(question1, question2, question3, question4, question5));
-    int n = 5;
+
+    private JavaQuestionsService createQuestions(){
+        for (int i = 0; i < 5; i++) {
+            underTest.add("que" + i, "ans" + i);
+        }
+        return underTest;
+    }
 
     @Test
     void addAsFields_addedRepeatedQuestionsAndAnswer_thrownAlreadyAddedQuestionsException() {
-        for (int i = 0; i < n; i++) {
-            underTest.add("que" + String.valueOf(i), "ans" + String.valueOf(i));
-        }
+        createQuestions();
         assertThrows(QuestionAlreadyAddedException.class, () -> underTest.add("que1",
                 "ans1"));
     }
@@ -68,16 +69,22 @@ class JavaQuestionsServiceTest {
 
     @Test
     void getAll_existingQuestion_returnAllQuestions() {
-
+        createQuestions();
+        Collection<Question>result = underTest.getAll();
+        assertIterableEquals(questions,result);
     }
 
     @Test
     void getAll_noExistingQuestion_returnEmptyCollections() {
-
+        Collection<Question>result = underTest.getAll();
+        assertIterableEquals(Collections.emptySet(),result);
     }
 
     @Test
     void getRandomQuestions_noExistingQuestion_returnEmptyCollections() {
-
+        createQuestions();
+        Question result1 = underTest.getRandomQuestion();
+        Question result2 = underTest.getRandomQuestion();
+        assertNotEquals(result2, result1);
     }
 }
