@@ -39,11 +39,20 @@ class ExaminerServiceImplTest {
         assertThrows(TooManyRequestsException.class, () -> underTest.getQuestions(10));
     }
 
-//    @Test
-//    void qetQuestions_amountNoMoreSize_returnSetOfRandomQuestions() {
-//        doReturn(questionsTest()).when(questionService);
-//        Set<Question> result1 = underTest.getQuestions(3);
-//        Set<Question> result2 = underTest.getQuestions(3);
-//        assertNotEquals(result2, result1);
-//    }
+    @Test
+    void qetQuestions_amountNoMoreSize_returnSetOfRandomQuestions() {
+        when(questionService.getAll()).thenReturn(questionsTest());
+        when(questionService.getRandomQuestion()).thenReturn(new Question("que1", "ans1"))
+        .thenReturn(new Question("que2", "ans2"))
+        .thenReturn(new Question("que2", "ans2"))
+        .thenReturn(new Question("que4", "ans4"))
+        .thenReturn(new Question("que3", "ans3"));
+        Set<Question> result = underTest.getQuestions(3);
+        Set<Question> expected = new HashSet<>(List.of(
+                new Question("que1", "ans1"),
+                new Question("que2", "ans2"),
+                new Question("que4", "ans4")
+        ));
+        assertEquals(expected, result);
+    }
 }
