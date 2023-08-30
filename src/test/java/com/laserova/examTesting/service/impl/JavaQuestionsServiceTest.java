@@ -4,6 +4,7 @@ import com.laserova.examTesting.dto.Question;
 import com.laserova.examTesting.exception.QuestionAlreadyAddedException;
 import com.laserova.examTesting.exception.QuestionNotFoundException;
 import com.laserova.examTesting.repository.JavaQuestionRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,13 +35,13 @@ class JavaQuestionsServiceTest {
 
     @Test
     void addAsField_addedRepeatedQuestionsAndAnswer_thrownQuestionAlreadyAddedException() {
-        underTest.add(question3.getQuestion(), question3.getAnswer());
-        assertThrows(QuestionAlreadyAddedException.class, () -> underTest.add(question3.getQuestion(), question3.getAnswer()));
+        underTest.add(new Question(question3.getQuestion(), question3.getAnswer()));
+        assertThrows(QuestionAlreadyAddedException.class, () -> underTest.add(new Question(question3.getQuestion(), question3.getAnswer())));
     }
 
     @Test
     void addAsFields_addedNewQuestionsAndAnswer_questionsAddedAndReturned() {
-        when(underTest.add(question3.getQuestion(), question3.getAnswer())).thenReturn(question3);
+        when(javaQuestionRepository.add(new Question(question3.getQuestion(), question3.getAnswer()))).thenReturn(question3);
         Question result = underTest.add(question3.getQuestion(), question3.getAnswer());
         assertEquals(question3, result);
         assertTrue(underTest.getAll().contains(question3));
@@ -71,20 +72,21 @@ class JavaQuestionsServiceTest {
 
     @Test
     void remove_removeExistingQuestion_questionsRemovedAndReturned() {
-        when(javaQuestionRepository.remove(question2)).thenReturn(question2);
-        underTest.remove(question2);
-        Question result = underTest.remove(question2);
-        assertEquals(question2, result);
-        assertFalse(questions().contains(question2));
+        when(javaQuestionRepository.remove(question1)).thenReturn(question1);
+        System.out.println(underTest.toString());
+        underTest.add(question1);
+        System.out.println(underTest.toString());
+
+        Question result = underTest.remove(question1);
+        System.out.println(underTest.toString());
+
+        assertEquals(question1, result);
+        assertFalse(questions().contains(question1));
     }
 
     @Test
     void getAll_existingQuestion_returnAllQuestions() {
-        when(javaQuestionRepository.add(question1)).thenReturn(question1);
-        when(javaQuestionRepository.add(question2)).thenReturn(question2);
-        underTest.add(question1);
-        underTest.add(question2);
-
+        when(javaQuestionRepository.getAll()).thenReturn(questions());
         Collection<Question> result = underTest.getAll();
         assertIterableEquals(questions(), result);
     }
