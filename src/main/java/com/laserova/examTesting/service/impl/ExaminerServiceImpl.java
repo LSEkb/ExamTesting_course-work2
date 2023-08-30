@@ -27,9 +27,9 @@ public class ExaminerServiceImpl implements ExaminerService {
         if (amount > questionService.getAll().size()) {
             throw new TooManyRequestsException();
         }
-        do {
+        while (examTicket.size() < amount) {
             examTicket.add(questionService.getRandomQuestion());
-        } while (examTicket.size() < amount);
+        }
         return examTicket;
     }
 }
