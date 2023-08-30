@@ -3,7 +3,6 @@ package com.laserova.examTesting.service.impl;
 import com.laserova.examTesting.dto.Question;
 import com.laserova.examTesting.exception.QuestionAlreadyAddedException;
 import com.laserova.examTesting.exception.QuestionNotFoundException;
-import com.laserova.examTesting.exception.TooManyRequestsException;
 import com.laserova.examTesting.service.QuestionService;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ public class JavaQuestionsService implements QuestionService {
     @Override
     public Question add(String question, String answer) {
         Question question1 = new Question(question, answer);
-        questions.add(question1);
+        this.add(question1);
         return question1;
     }
 
@@ -53,6 +52,6 @@ public class JavaQuestionsService implements QuestionService {
         if (questions.isEmpty()){
             throw new QuestionNotFoundException();
         }
-        return new ArrayList<Question>(questions).get(random.nextInt(questions.size()));
+        return new ArrayList<>(questions).get(random.nextInt(questions.size()));
     }
 }
