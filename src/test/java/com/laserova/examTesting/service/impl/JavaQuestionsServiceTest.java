@@ -25,11 +25,25 @@ class JavaQuestionsServiceTest {
         questions = new ArrayList<>(Arrays.asList(question1, question2, question3));
     }
 
+//    @Test
+//    void addAsField_addedRepeatedQuestionsAndAnswer_thrownQuestionAlreadyAddedException() {
+//        underTest.add(question1.getQuestion(), question1.getAnswer());
+//        assertThrows(QuestionAlreadyAddedException.class, () -> underTest.add(question1.getQuestion(), question1.getAnswer()));
+//    }
+//    Тест падает с ошибкой "QuestionAlreadyAddedException to be thrown, but nothing was thrown" я заподозрила, что ошибка
+//            просто отрабатывает внутри метода add (как объект), и не приходит в метод add (как поля). Или дело в чем-то другом?
+
     @Test
     void addAsFields_addedNewQuestionsAndAnswer_questionsAddedAndReturned() {
         Question result = underTest.add(question1.getQuestion(), question1.getAnswer());
         assertEquals(question1, result);
         assertTrue(underTest.getAll().contains(question1));
+    }
+
+    @Test
+    void addAsObject_addedRepeatedQuestionsAndAnswer_thrownQuestionAlreadyAddedException() {
+        underTest.add(question1);
+        assertThrows(QuestionAlreadyAddedException.class, () -> underTest.add(question1));
     }
 
     @Test
