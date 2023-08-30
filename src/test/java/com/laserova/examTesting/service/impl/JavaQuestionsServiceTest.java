@@ -34,7 +34,6 @@ class JavaQuestionsServiceTest {
 
     @Test
     void addAsField_addedRepeatedQuestionsAndAnswer_thrownQuestionAlreadyAddedException() {
-        when(underTest.add(question3.getQuestion(), question3.getAnswer())).thenReturn(question3);
         underTest.add(question3.getQuestion(), question3.getAnswer());
         assertThrows(QuestionAlreadyAddedException.class, () -> underTest.add(question3.getQuestion(), question3.getAnswer()));
     }
@@ -49,7 +48,7 @@ class JavaQuestionsServiceTest {
 
     @Test
     void addAsObject_addedRepeatedQuestionsAndAnswer_thrownQuestionAlreadyAddedException() {
-        when(underTest.add(question3)).thenReturn(question3);
+        when(javaQuestionRepository.add(question3)).thenReturn(question3);
         underTest.add(question3);
         assertThrows(QuestionAlreadyAddedException.class, () -> underTest.add(question3));
 
@@ -57,7 +56,7 @@ class JavaQuestionsServiceTest {
 
     @Test
     void addAsObject_addedNewQuestionsAndAnswer_questionsAddedAndReturned() {
-        when(underTest.add(question3)).thenReturn(question3);
+        when(javaQuestionRepository.add(question3)).thenReturn(question3);
         Question result = underTest.add(question3);
         assertEquals(question3, result);
         assertTrue(underTest.getAll().contains(question3));
@@ -65,14 +64,14 @@ class JavaQuestionsServiceTest {
 
     @Test
     void remove_removeNotExistingQuestion_thrownNotFoundQuestionsException() {
-        when(underTest.remove(question3)).thenReturn(question3);
+        when(javaQuestionRepository.remove(question3)).thenReturn(question3);
         underTest.remove(question3);
         assertThrows(QuestionNotFoundException.class, () -> underTest.remove(question3));
     }
 
     @Test
     void remove_removeExistingQuestion_questionsRemovedAndReturned() {
-        when(underTest.remove(question2)).thenReturn(question2);
+        when(javaQuestionRepository.remove(question2)).thenReturn(question2);
         underTest.remove(question2);
         Question result = underTest.remove(question2);
         assertEquals(question2, result);
@@ -81,8 +80,8 @@ class JavaQuestionsServiceTest {
 
     @Test
     void getAll_existingQuestion_returnAllQuestions() {
-        when(underTest.add(question1)).thenReturn(question1);
-        when(underTest.add(question2)).thenReturn(question2);
+        when(javaQuestionRepository.add(question1)).thenReturn(question1);
+        when(javaQuestionRepository.add(question2)).thenReturn(question2);
         underTest.add(question1);
         underTest.add(question2);
 
@@ -104,9 +103,6 @@ class JavaQuestionsServiceTest {
     @Test
     void getRandomQuestions_NotEmptyQuestionsSet_ReturnQuestionFromQuestionsSet() {
         when(javaQuestionRepository.getAll()).thenReturn(questions());
-//        underTest.add(question1);
-//        underTest.add(question2);
-//        underTest.add(question3);
         Question result = underTest.getRandomQuestion();
         assertTrue(underTest.getAll().contains(result));
     }
