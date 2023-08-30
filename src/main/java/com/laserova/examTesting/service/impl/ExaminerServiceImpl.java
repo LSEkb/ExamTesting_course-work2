@@ -1,6 +1,7 @@
 package com.laserova.examTesting.service.impl;
 
 import com.laserova.examTesting.dto.Question;
+import com.laserova.examTesting.exception.InvalidParameterValueException;
 import com.laserova.examTesting.exception.TooManyRequestsException;
 import com.laserova.examTesting.service.ExaminerService;
 import com.laserova.examTesting.service.QuestionService;
@@ -20,8 +21,11 @@ public class ExaminerServiceImpl implements ExaminerService {
     @Override
     public Set<Question> getQuestions(int amount) {
         Set<Question> examTicket = new HashSet<>();
+        if (amount < 0) {
+            throw new InvalidParameterValueException();
+        }
         if (amount > questionService.getAll().size()) {
-            throw new TooManyRequestsException("Количество вопросов в базе меньше затребованного для билета");
+            throw new TooManyRequestsException();
         }
         do {
             examTicket.add(questionService.getRandomQuestion());
