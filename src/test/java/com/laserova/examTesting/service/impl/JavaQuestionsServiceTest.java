@@ -4,7 +4,6 @@ import com.laserova.examTesting.dto.Question;
 import com.laserova.examTesting.exception.QuestionAlreadyAddedException;
 import com.laserova.examTesting.exception.QuestionNotFoundException;
 import com.laserova.examTesting.repository.JavaQuestionRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,13 +34,19 @@ class JavaQuestionsServiceTest {
 
     @Test
     void addAsField_addedRepeatedQuestionsAndAnswer_thrownQuestionAlreadyAddedException() {
+//        when(dataService.getDataItemById(Mockito.eq("idValue")))
+//                .thenReturn("dataItem");
+
+        when(javaQuestionRepository.add(new Question(question3.getQuestion(), question3.getAnswer())))
+                .thenReturn(question3);
         underTest.add(new Question(question3.getQuestion(), question3.getAnswer()));
         assertThrows(QuestionAlreadyAddedException.class, () -> underTest.add(new Question(question3.getQuestion(), question3.getAnswer())));
     }
 
     @Test
     void addAsFields_addedNewQuestionsAndAnswer_questionsAddedAndReturned() {
-        when(javaQuestionRepository.add(new Question(question3.getQuestion(), question3.getAnswer()))).thenReturn(question3);
+        when(javaQuestionRepository.add(eq((new Question(question3.getQuestion(), question3.getAnswer())))))
+                .thenReturn(question3);
         Question result = underTest.add(question3.getQuestion(), question3.getAnswer());
         assertEquals(question3, result);
         assertTrue(underTest.getAll().contains(question3));
