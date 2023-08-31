@@ -28,17 +28,15 @@ class JavaQuestionsServiceTest {
     Question question2 = new Question("que1", "ans1");
     Question question3 = new Question("que2", "ans2");
 
-    private  Set<Question> questions() {
-        return new HashSet<>(Arrays.asList(question1, question2));
+    private Set<Question> questions() {
+        return new HashSet<>(Arrays.asList(question1, question2, question3));
     }
 
     @Test
     void addAsField_addedRepeatedQuestionsAndAnswer_thrownQuestionAlreadyAddedException() {
-//        when(dataService.getDataItemById(Mockito.eq("idValue")))
-//                .thenReturn("dataItem");
-
         when(javaQuestionRepository.add(new Question(question3.getQuestion(), question3.getAnswer())))
-                .thenReturn(question3);
+                .thenReturn(question3)
+                .thenThrow(QuestionAlreadyAddedException.class);
         underTest.add(new Question(question3.getQuestion(), question3.getAnswer()));
         assertThrows(QuestionAlreadyAddedException.class, () -> underTest.add(new Question(question3.getQuestion(), question3.getAnswer())));
     }
@@ -47,6 +45,8 @@ class JavaQuestionsServiceTest {
     void addAsFields_addedNewQuestionsAndAnswer_questionsAddedAndReturned() {
         when(javaQuestionRepository.add(eq((new Question(question3.getQuestion(), question3.getAnswer())))))
                 .thenReturn(question3);
+        when(javaQuestionRepository.getAll())
+                .thenReturn(List.of(question3));
         Question result = underTest.add(question3.getQuestion(), question3.getAnswer());
         assertEquals(question3, result);
         assertTrue(underTest.getAll().contains(question3));
@@ -54,23 +54,26 @@ class JavaQuestionsServiceTest {
 
     @Test
     void addAsObject_addedRepeatedQuestionsAndAnswer_thrownQuestionAlreadyAddedException() {
-        when(javaQuestionRepository.add(question3)).thenReturn(question3);
+        when(javaQuestionRepository.add(question3)).thenReturn(question3)
+                .thenThrow(QuestionAlreadyAddedException.class);
         underTest.add(question3);
         assertThrows(QuestionAlreadyAddedException.class, () -> underTest.add(question3));
-
     }
 
     @Test
     void addAsObject_addedNewQuestionsAndAnswer_questionsAddedAndReturned() {
         when(javaQuestionRepository.add(question3)).thenReturn(question3);
         Question result = underTest.add(question3);
+        when(javaQuestionRepository.getAll())
+                .thenReturn(List.of(question3));
         assertEquals(question3, result);
         assertTrue(underTest.getAll().contains(question3));
     }
 
     @Test
     void remove_removeNotExistingQuestion_thrownNotFoundQuestionsException() {
-        when(javaQuestionRepository.remove(question3)).thenReturn(question3);
+        when(javaQuestionRepository.remove(question3)).thenReturn(question3)
+                .thenThrow(QuestionNotFoundException.class);
         underTest.remove(question3);
         assertThrows(QuestionNotFoundException.class, () -> underTest.remove(question3));
     }
@@ -78,15 +81,12 @@ class JavaQuestionsServiceTest {
     @Test
     void remove_removeExistingQuestion_questionsRemovedAndReturned() {
         when(javaQuestionRepository.remove(question1)).thenReturn(question1);
-        System.out.println(underTest.toString());
         underTest.add(question1);
-        System.out.println(underTest.toString());
-
+        when(javaQuestionRepository.getAll())
+                .thenReturn(List.of(question3));
         Question result = underTest.remove(question1);
-        System.out.println(underTest.toString());
-
         assertEquals(question1, result);
-        assertFalse(questions().contains(question1));
+        assertFalse(underTest.getAll().contains(question1));
     }
 
     @Test

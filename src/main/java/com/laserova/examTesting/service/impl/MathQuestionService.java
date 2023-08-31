@@ -1,6 +1,7 @@
 package com.laserova.examTesting.service.impl;
 
 import com.laserova.examTesting.dto.Question;
+import com.laserova.examTesting.exception.QuestionNotFoundException;
 import com.laserova.examTesting.repository.MathQuestionRepository;
 import com.laserova.examTesting.service.QuestionService;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
+
 @Service
 public class MathQuestionService implements QuestionService {
     private final MathQuestionRepository mathQuestionRepository;
@@ -41,8 +43,9 @@ public class MathQuestionService implements QuestionService {
 
     @Override
     public Question getRandomQuestion() {
-        ArrayList<Question> questions_array = new ArrayList<>(mathQuestionRepository.getAll());
-        int index = random.nextInt(questions_array.size());
-        return questions_array.get(index);
+        if (mathQuestionRepository.getAll().isEmpty()) {
+            throw new QuestionNotFoundException();
+        }
+        return new ArrayList<>(mathQuestionRepository.getAll()).get(random.nextInt(mathQuestionRepository.getAll().size()));
     }
 }
