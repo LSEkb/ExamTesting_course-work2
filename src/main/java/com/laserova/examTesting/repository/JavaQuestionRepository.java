@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public class JavaQuestionRepository implements QuestionsRepository{
+public class JavaQuestionRepository implements QuestionsRepository {
     private final Set<Question> questions;
 
     public JavaQuestionRepository() {
@@ -25,10 +25,9 @@ public class JavaQuestionRepository implements QuestionsRepository{
 
     @Override
     public Question remove(Question question) {
-        if (!questions.contains(question)) {
+        if (!questions.remove(question)) {
             throw new QuestionNotFoundException();
         }
-        questions.remove(question);
         return question;
     }
 

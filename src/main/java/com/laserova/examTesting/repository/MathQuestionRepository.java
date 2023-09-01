@@ -8,8 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
 @Repository
-public class MathQuestionRepository implements QuestionsRepository{
+public class MathQuestionRepository implements QuestionsRepository {
     private final Set<Question> questions;
 
     public MathQuestionRepository() {
@@ -18,7 +19,7 @@ public class MathQuestionRepository implements QuestionsRepository{
 
     @Override
     public Question add(Question question) {
-        if (questions.contains(question)) {
+        if (!questions.add(question)) {
             throw new QuestionAlreadyAddedException();
         }
         questions.add(question);
@@ -27,10 +28,9 @@ public class MathQuestionRepository implements QuestionsRepository{
 
     @Override
     public Question remove(Question question) {
-        if (!questions.contains(question)) {
+        if (!questions.remove(question)) {
             throw new QuestionNotFoundException();
         }
-        questions.remove(question);
         return question;
     }
 
